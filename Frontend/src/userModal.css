@@ -1,0 +1,111 @@
+.user-modal-popover {
+  position: absolute;
+  top: 65px;              /* below navbar */
+  right: 16px;            /* align to avatar */
+  width: 260px;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 16px 14px 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* CLOSE BUTTON */
+.close-btn {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #555;
+}
+
+/* AVATAR */
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #4f46e5;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 6px auto 8px;
+}
+
+/* USER TEXT */
+.username {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 4px 0 2px;
+}
+
+.email {
+  text-align: center;
+  font-size: 12.5px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+/* STATUS */
+.user-meta {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.status {
+  font-size: 12px;
+  color: #16a34a;
+}
+
+/* SEPARATOR */
+.user-modal-popover hr {
+  border: none;
+  height: 1px;
+  background: #eee;
+  margin: 10px 0;
+}
+
+/* BUTTONS */
+.logout-btn,
+.login-btn {
+  width: 100%;
+  padding: 8px 0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* LOGOUT */
+.logout-btn {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* LOGIN */
+.login-btn {
+  background: #22c55e;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* NOT LOGGED */
+.not-logged-text {
+  text-align: center;
+  font-size: 13px;
+  color: #555;
+  margin: 20px 0 12px;
+}

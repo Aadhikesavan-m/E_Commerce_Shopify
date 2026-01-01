@@ -7,33 +7,57 @@ import banner2 from "./assets/Banner/banner2.avif";
 import banner3 from "./assets/Banner/banner3.avif";
 import card1 from "./assets/offer-card/card1.avif";
 import card2 from "./assets/offer-card/card2.avif";
+import UserModal from "./userModal";
 
-function AddtoCart({ cart, setCart, users }) {
+function AddtoCart({ cart, setCart }) {
+  const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("Shop All");
-  const [bestSellers, setBestSellers] = useState([]);
+  const [showUserModal, setShowUserModal] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const images = [banner1, banner2, banner3];
   const [index, setIndex] = useState(0);
 
   const year = new Date().getFullYear();
 
+  //Fetch loggedin User
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const res = await fetch("http://localhost:5000/api/auth/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await res.json();
+        setUser(data.user);
+      } catch (err) {
+        console.error("Failed to fetch user");
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   //user detail
-  const lastUser = users.length > 0 ? users[users.length - 1] : null;
-  const icon = lastUser ? lastUser.username.charAt(0).toUpperCase() : "👤";
+  const icon = user ? user.username.charAt(0).toUpperCase() : "👤";
 
   //handleLogout
   const handleLogout = () => {
-    setUsers([]);
-    navigate("/login")
-};
-
-
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/login");
+  };
 
   // Banner change
   useEffect(() => {
@@ -156,19 +180,21 @@ function AddtoCart({ cart, setCart, users }) {
           </button>
         </Link>
         <div className="user-auth-wrapper">
-          <span className="avatar">{icon}</span>
-
-          {lastUser ? (
-            <span className="auth-btn" onClick={handleLogout}>
-              Logout
-            </span>
-          ) : (
-            <Link to="/login" className="auth-btn">
-              Login
-            </Link>
-          )}
+          <span
+            className="avatar"
+            onClick={() => setShowUserModal((prev) => !prev)}
+          >
+            {icon}
+          </span>
         </div>
       </nav>
+      {showUserModal && (
+        <UserModal
+          user={user}
+          onClose={() => setShowUserModal(false)}
+          onLogout={handleLogout}
+        />
+      )}
 
       {/* BODY */}
       {isLoading ? (
