@@ -506,6 +506,7 @@
 .footer-top {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 40px;
   margin-bottom: 40px;
 }
@@ -781,5 +782,85 @@
   .banner-button {
     font-size: 14px;
     padding: 8px 20px;
+  }
+}
+
+
+
+/* ======================================
+   ⬆️ SCROLL TO TOP BUTTON
+   ====================================== */
+.scroll-top-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(45deg, #5a2aff, #8a2be2);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(90, 42, 255, 0.3);
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scroll-top-btn:hover {
+  background: linear-gradient(45deg, #8a2be2, #5a2aff);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(90, 42, 255, 0.4);
+}
+
+.scroll-top-btn:active {
+  transform: scale(0.95);
+}
+
+/* Responsive adjustments for scroll button */
+@media (max-width: 768px) {
+  .scroll-top-btn {
+    bottom: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+  }
+}
+
+@media (max-width: 480px) {
+  .scroll-top-btn {
+    bottom: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .scroll-top-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Optional: Add a fade-out animation when hiding */
+.scroll-top-btn.hide {
+  animation: fadeOutDown 0.3s ease forwards;
+}
+
+@keyframes fadeOutDown {
+  to {
+    opacity: 0;
+    transform: translateY(20px);
   }
 }

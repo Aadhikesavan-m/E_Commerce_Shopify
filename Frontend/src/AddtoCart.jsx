@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./atc.css";
 import { Link, useNavigate } from "react-router-dom";
 import Img from "./assets/no search.jpg";
@@ -8,6 +8,7 @@ import banner3 from "./assets/Banner/banner3.avif";
 import card1 from "./assets/offer-card/card1.avif";
 import card2 from "./assets/offer-card/card2.avif";
 import UserModal from "./userModal";
+import { ChevronUp } from "lucide-react"; // Import icon for the button
 
 function AddtoCart({ cart, setCart }) {
   const [user, setUser] = useState(null);
@@ -17,13 +18,37 @@ function AddtoCart({ cart, setCart }) {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("Shop All");
   const [showUserModal, setShowUserModal] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const navigate = useNavigate();
+  const topRef = useRef(null);
 
   const images = [banner1, banner2, banner3];
   const [index, setIndex] = useState(0);
 
   const year = new Date().getFullYear();
+
+  // Scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  // Show/hide scroll-to-top button based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Fetch loggedin User
   useEffect(() => {
@@ -163,7 +188,7 @@ function AddtoCart({ cart, setCart }) {
   };
 
   return (
-    <div className="shop-page">
+    <div className="shop-page" ref={topRef}>
       {/* MARQUEE */}
       <div className="marquee-container">
         <div className="marquee">
@@ -353,12 +378,12 @@ function AddtoCart({ cart, setCart }) {
                         </div>
                       </Link>
 
-                          {/* <button
-                            className="addtocart"
-                            onClick={() => handleAddToCart(item)}
-                          >
-                            Add to Cart
-                          </button> */}
+                      {/* <button
+                        className="addtocart"
+                        onClick={() => handleAddToCart(item)}
+                      >
+                        Add to Cart
+                      </button> */}
                     </li>
                   );
                 })}
@@ -455,6 +480,17 @@ function AddtoCart({ cart, setCart }) {
             </footer>
           </center>
         </div>
+      )}
+
+      {/* MOVE TO TOP BUTTON */}
+      {showScrollTop && (
+        <button 
+          className="scroll-top-btn"
+          onClick={scrollToTop}
+          aria-label="Scroll to top"
+        >
+          <ChevronUp size={24} />
+        </button>
       )}
     </div>
   );
