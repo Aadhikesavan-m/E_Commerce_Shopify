@@ -1,0 +1,400 @@
+import React, { useEffect, useState } from "react";
+import "./atc.css";
+import { Link, useNavigate } from "react-router-dom";
+import Img from "./assets/no search.jpg";
+import banner1 from "./assets/Banner/banner.avif";
+import banner2 from "./assets/Banner/banner2.avif";
+import banner3 from "./assets/Banner/banner3.avif";
+import card1 from "./assets/offer-card/card1.avif";
+import card2 from "./assets/offer-card/card2.avif";
+
+function AddtoCart({ cart, setCart, users }) {
+  const [products, setProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [activeCategory, setActiveCategory] = useState("Shop All");
+  const [bestSellers, setBestSellers] = useState([]);
+
+  const navigate = useNavigate()
+
+  const images = [banner1, banner2, banner3];
+  const [index, setIndex] = useState(0);
+
+  const year = new Date().getFullYear();
+
+  //user detail
+  const lastUser = users.length > 0 ? users[users.length - 1] : null;
+  const icon = lastUser ? lastUser.username.charAt(0).toUpperCase() : "👤";
+
+  //handleLogout
+  const handleLogout = () => {
+    setUsers([]);
+    navigate("/login")
+};
+
+
+
+  // Banner change
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [images.length]);
+
+  // Load all products
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        const response = await fetch("https://dummyjson.com/products?limit=0");
+        const data = await response.json();
+        const productsWithStock = data.products.map((p) => ({
+          ...p,
+          inStock: (p.stock || 10) > 0,
+        }));
+        setProducts(productsWithStock);
+        setAllProducts(productsWithStock);
+      } catch (error) {
+        alert("Error loading products: " + error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadProducts();
+  }, []);
+
+  // Best Sellers (Updated to use actual product array)
+  // useEffect(() => {
+  //   if (products.length > 0) {
+  //     const shuffled = [...products].sort(() => 0.5 - Math.random());
+  //     setBestSellers(shuffled.slice(0, 4));
+  //   }
+  // }, [products]);
+
+  // Add to cart
+  function handleAddToCart(product) {
+    const exists = cart.find((item) => item.id === product.id);
+    if (!exists) {
+      setCart([...cart, { ...product, qty: 1 }]);
+    }
+  }
+
+  // Search Filter
+  function searchBar(value) {
+    setSearch(value);
+    setActiveCategory("Shop All");
+
+    const filtered = allProducts.filter(
+      (item) =>
+        item.title?.toLowerCase().includes(value.toLowerCase()) ||
+        item.category?.toLowerCase().includes(value.toLowerCase()) ||
+        item.description?.toLowerCase().includes(value.toLowerCase())
+    );
+    setProducts(filtered);
+  }
+
+  // Category Filter
+  function filterByCategory(category) {
+    setActiveCategory(category);
+    setSearch("");
+
+    if (category === "Shop All") {
+      setProducts(allProducts);
+      return;
+    }
+
+    const filtered = allProducts.filter(
+      (item) =>
+        item.category?.toLowerCase().includes(category.toLowerCase()) ||
+        item.title?.toLowerCase().includes(category.toLowerCase())
+    );
+
+    setProducts(filtered);
+  }
+
+  const actualPrice = (item) => {
+    const discounted = item.price;
+    const d = item.discountPercentage;
+
+    return ((discounted / (1 - d / 100)) * 5).toFixed(2);
+  };
+
+  return (
+    <div className="shop-page">
+      {/* MARQUEE */}
+      <div className="marquee-container">
+        <div className="marquee">
+          <span>🔥 Mega Sale! Upto 50% Off on all products — Hurry!</span>
+          <span>🚚 Free Delivery on orders above ₹499</span>
+          <span>🎁 New Arrivals are Live Now!</span>
+        </div>
+      </div>
+
+      {/* NAVBAR */}
+      <nav className="navbar">
+        <h1 className="logo">Shopify!</h1>
+
+        <ul>
+          <li>
+            <div className="search-container">
+              <input
+                type="text"
+                placeholder="Search…"
+                value={search}
+                onChange={(e) => searchBar(e.target.value)}
+                className="search-bar"
+              />
+              <button className="search-icon">🔍</button>
+            </div>
+          </li>
+        </ul>
+
+        <Link to="/cart">
+          <button className="cart-btn">
+            🛒 <span className="cart-count">{cart.length}</span>
+          </button>
+        </Link>
+        <div className="user-auth-wrapper">
+          <span className="avatar">{icon}</span>
+
+          {lastUser ? (
+            <span className="auth-btn" onClick={handleLogout}>
+              Logout
+            </span>
+          ) : (
+            <Link to="/login" className="auth-btn">
+              Login
+            </Link>
+          )}
+        </div>
+      </nav>
+
+      {/* BODY */}
+      {isLoading ? (
+        <h2 style={{ textAlign: "center", marginTop: "120px" }}>Loading...</h2>
+      ) : (
+        <div className="body">
+          {/* CATEGORY FILTER */}
+          <div className="category-container">
+            <ul className="category-list">
+              {[
+                "Shop All",
+                "Tablets",
+                "Groceries",
+                "Beauty",
+                "Kitchen",
+                "Mobile",
+                "Motorcycle",
+                "Watches",
+              ].map((cat) => (
+                <li
+                  key={cat}
+                  className={activeCategory === cat ? "active" : ""}
+                  onClick={() => filterByCategory(cat)}
+                >
+                  {cat}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* HIDE BANNERS WHEN SEARCH OR CATEGORY FILTER ACTIVE */}
+          {search === "" && activeCategory === "Shop All" && (
+            <>
+              {/* MAIN BANNER */}
+              <div className="banner">
+                <img src={images[index]} alt="banner" className="banner-img" />
+
+                <div className="banner-overlay">
+                  <p className="offer">Best Prices</p>
+                  <h2 className="banner-head">
+                    Incredible Prices <br />
+                    on All Your <br />
+                    Favourite Items
+                  </h2>
+                  <p className="banner-para">
+                    Get more for less on selected brands
+                  </p>
+
+                  <button className="banner-button">Shop Now</button>
+                </div>
+              </div>
+
+              {/* DUAL BANNER */}
+              <div className="dual-banner">
+                <div className="banner-box left-banner d-b-1">
+                  <div className="banner-content ">
+                    <p className="banner-small">Holiday Deals</p>
+                    <h1 className="banner-title">
+                      Up to
+                      <br />
+                      30% off
+                    </h1>
+                    <p className="banner-desc">Selected Smartphone Brands</p>
+
+                    <button className="banner-btn">Shop</button>
+                  </div>
+
+                  <img src={card1} alt="Phone" className="banner-image" />
+                </div>
+
+                <div className="banner-box right-banner">
+                  <div className="banner-content">
+                    <p className="banner-small">Just In</p>
+                    <h1 className="banner-title">
+                      Take Your
+                      <br />
+                      Sound
+                      <br />
+                      Anywhere
+                    </h1>
+                    <p className="banner-desc">Top Headphone Brands</p>
+
+                    <button className="banner-btn">Shop</button>
+                  </div>
+
+                  <img src={card2} alt="Headphones" className="banner-image" />
+                </div>
+              </div>
+              <h2 className="card-heading">All Products</h2>
+            </>
+          )}
+
+          {/* PRODUCT LIST */}
+          <div className="card">
+            {products.length > 0 ? (
+              <ul className="product-list-grid">
+                {products.map((item) => (
+                  <li key={item.id} className="product-item-card">
+                    <Link to={`/product/${item.id}`} className="product-link">
+                      <div className="card-content-wrapper">
+                        <img
+                          src={item.thumbnail}
+                          className="card-image"
+                          alt={item.title}
+                        />
+                        <p className="title">{item.title}</p>
+                        <p className="para-card">
+                          {item.description.slice(0, 25)}..
+                        </p>
+                        <p className="price">
+                          ₹ {(item.price * 5).toFixed(2)}
+                          <span className="discount">
+                            ₹ {actualPrice(item)}
+                          </span>
+                          <br />
+                          <span className="p-discount">
+                            {item.discountPercentage}% Off
+                          </span>
+                        </p>
+                      </div>
+                    </Link>
+
+                    {/* <button
+                      className="addtocart"
+                      onClick={() => handleAddToCart(item)}
+                    >
+                      Add to Cart
+                    </button> */}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="no-product-wrapper">
+                <img src={Img} alt="No product" className="no-product-img" />
+                <h1 className="no-product">"Sorry! No Products Found..☹️"</h1>
+              </div>
+            )}
+          </div>
+
+          {/* FOOTER */}
+          <div className="footer">
+            <div className="footer-top">
+              <div className="footer-col">
+                <h3>Store Location</h3>
+                <p>500 Terry Francine Street</p>
+                <p>San Francisco, CA 94158</p>
+                <p>info@mysite.com</p>
+                <p>123-456-7890</p>
+
+                <div className="social-icons">
+                  <i className="fa-brands fa-facebook"></i>
+                  <i className="fa-brands fa-instagram"></i>
+                  <i className="fa-brands fa-twitter"></i>
+                  <i className="fa-brands fa-youtube"></i>
+                </div>
+              </div>
+
+              <div className="footer-col">
+                <h3>Shop</h3>
+                <p>Shop All</p>
+                <p>Computers</p>
+                <p>Tablets</p>
+                <p>Drones & Cameras</p>
+                <p>Audio</p>
+                <p>Mobile</p>
+                <p>T.V & Home Cinema</p>
+                <p>Wearable Tech</p>
+                <p>Sale</p>
+              </div>
+
+              <div className="footer-col">
+                <h3>Customer Support</h3>
+                <p>Contact Us</p>
+                <p>Help Center</p>
+                <p>About Us</p>
+                <p>Careers</p>
+              </div>
+
+              <div className="footer-col">
+                <h3>Policy</h3>
+                <p>Shipping & Returns</p>
+                <p>Terms & Conditions</p>
+                <p>Payment Methods</p>
+                <p>FAQ</p>
+              </div>
+            </div>
+
+            <hr className="footer-line" />
+
+            <div className="footer-bottom">
+              <p>We accept the following paying methods</p>
+
+              <div className="payment-icons">
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png"
+                  alt="visa"
+                />
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png"
+                  alt="mastercard"
+                />
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/UPI_logo.svg/960px-UPI_logo.svg.png?20240520070249"
+                  alt="UPi"
+                />
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/0/0f/RuPay-Logo.png?20170423140208"
+                  alt="rupay"
+                />
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg"
+                  alt="paypal"
+                />
+              </div>
+            </div>
+          </div>
+
+          <center>
+            <footer className="bottom-footer">
+              <p>©️ {year} by Shopify!</p>
+            </footer>
+          </center>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default AddtoCart;

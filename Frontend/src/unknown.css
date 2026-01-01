@@ -1,0 +1,11 @@
+.errorMsg {
+  width: 1500px; 
+  height: 900px;
+}
+
+.container {
+  height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,0 +1,80 @@
+/* Reset */
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Page Center */
+.login-form {
+  width: 100%;
+  max-width: 420px;
+  margin: 80px auto;
+  padding: 2.5rem;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Title */
+.login-form h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #111827;
+}
+
+/* Inputs */
+.login-form input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 1.2rem;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 15px;
+  transition: 0.3s ease;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* Button */
+.login-form button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-form button:hover {
+  background: #1d4ed8;
+}
+
+.login-form button:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+}
+
+/* Links */
+.login-form p {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 14px;
+}
+
+.login-form a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-form a:hover {
+  text-decoration: underline;
+}

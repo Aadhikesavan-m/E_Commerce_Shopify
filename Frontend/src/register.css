@@ -1,0 +1,160 @@
+/* Reset */
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Page Center */
+.register-form {
+  width: 100%;
+  max-width: 420px;
+  margin: 80px auto;
+  padding: 2.5rem;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Title */
+.register-form h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #111827;
+}
+
+/* Inputs */
+.register-form input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 1.2rem;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 15px;
+  transition: 0.3s ease;
+}
+
+.register-form input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* Button */
+.register-form button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: #16a34a;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.register-form button:hover {
+  background: #15803d;
+}
+
+.register-form button:disabled {
+  background: #86efac;
+  cursor: not-allowed;
+}
+
+/* Links */
+.register-form p {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 14px;
+}
+
+.register-form a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-form a:hover {
+  text-decoration: underline;
+}
+/* Reset */
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Page Center */
+.register-form {
+  width: 100%;
+  max-width: 420px;
+  margin: 80px auto;
+  padding: 2.5rem;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Title */
+.register-form h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #111827;
+}
+
+/* Inputs */
+.register-form input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 1.2rem;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 15px;
+  transition: 0.3s ease;
+}
+
+.register-form input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* Button */
+.register-form button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: #16a34a;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.register-form button:hover {
+  background: #15803d;
+}
+
+.register-form button:disabled {
+  background: #86efac;
+  cursor: not-allowed;
+}
+
+/* Links */
+.register-form p {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 14px;
+}
+
+.register-form a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-form a:hover {
+  text-decoration: underline;
+}
