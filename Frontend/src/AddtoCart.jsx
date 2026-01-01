@@ -25,8 +25,7 @@ function AddtoCart({ cart, setCart }) {
 
   const year = new Date().getFullYear();
 
-  //Fetch loggedin User
-
+  // Fetch loggedin User
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("token");
@@ -49,10 +48,10 @@ function AddtoCart({ cart, setCart }) {
     fetchUser();
   }, []);
 
-  //user detail
+  // user detail
   const icon = user ? user.username.charAt(0).toUpperCase() : "👤";
 
-  //handleLogout
+  // handleLogout
   const handleLogout = () => {
     localStorage.removeItem("token");
     setUser(null);
@@ -88,19 +87,22 @@ function AddtoCart({ cart, setCart }) {
     loadProducts();
   }, []);
 
-  // Best Sellers (Updated to use actual product array)
-  // useEffect(() => {
-  //   if (products.length > 0) {
-  //     const shuffled = [...products].sort(() => 0.5 - Math.random());
-  //     setBestSellers(shuffled.slice(0, 4));
-  //   }
-  // }, [products]);
-
-  // Add to cart
+  // Add to cart - Store calculated prices
   function handleAddToCart(product) {
     const exists = cart.find((item) => item.id === product.id);
     if (!exists) {
-      setCart([...cart, { ...product, qty: 1 }]);
+      // Calculate prices consistently
+      const priceInINR = product.price * 10;
+      const discountAmount = priceInINR * (product.discountPercentage / 100);
+      const discountedPrice = priceInINR - discountAmount;
+      const originalPrice = priceInINR / (1 - product.discountPercentage / 100);
+      
+      setCart([...cart, { 
+        ...product, 
+        qty: 1,
+        priceInINR: discountedPrice,
+        originalPriceInINR: originalPrice
+      }]);
     }
   }
 
@@ -137,11 +139,27 @@ function AddtoCart({ cart, setCart }) {
     setProducts(filtered);
   }
 
-  const actualPrice = (item) => {
-    const discounted = item.price;
-    const d = item.discountPercentage;
+  // Calculate original price (before discount) in INR
+  const getOriginalPrice = (item) => {
+    const discountedPrice = item.price * 10;
+    const discountPercentage = item.discountPercentage || 0;
+    
+    if (discountPercentage > 0) {
+      return (discountedPrice / (1 - discountPercentage / 100));
+    }
+    return discountedPrice;
+  };
 
-    return ((discounted / (1 - d / 100)) * 5).toFixed(2);
+  // Calculate discounted price in INR
+  const getDiscountedPrice = (item) => {
+    const priceInINR = item.price * 10;
+    const discountPercentage = item.discountPercentage || 0;
+    
+    if (discountPercentage > 0) {
+      const discountAmount = priceInINR * (discountPercentage / 100);
+      return priceInINR - discountAmount;
+    }
+    return priceInINR;
   };
 
   return (
@@ -291,40 +309,59 @@ function AddtoCart({ cart, setCart }) {
           <div className="card">
             {products.length > 0 ? (
               <ul className="product-list-grid">
-                {products.map((item) => (
-                  <li key={item.id} className="product-item-card">
-                    <Link to={`/product/${item.id}`} className="product-link">
-                      <div className="card-content-wrapper">
-                        <img
-                          src={item.thumbnail}
-                          className="card-image"
-                          alt={item.title}
-                        />
-                        <p className="title">{item.title}</p>
-                        <p className="para-card">
-                          {item.description.slice(0, 25)}..
-                        </p>
-                        <p className="price">
-                          ₹ {(item.price * 5).toFixed(2)}
-                          <span className="discount">
-                            ₹ {actualPrice(item)}
-                          </span>
-                          <br />
-                          <span className="p-discount">
-                            {item.discountPercentage}% Off
-                          </span>
-                        </p>
-                      </div>
-                    </Link>
+                {products.map((item) => {
+                  const discountedPrice = getDiscountedPrice(item);
+                  const originalPrice = getOriginalPrice(item);
+                  const hasDiscount = item.discountPercentage > 0;
+                  
+                  return (
+                    <li key={item.id} className="product-item-card">
+                      <Link to={`/product/${item.id}`} className="product-link">
+                        <div className="card-content-wrapper">
+                          <img
+                            src={item.thumbnail}
+                            className="card-image"
+                            alt={item.title}
+                          />
+                          <p className="title">{item.title}</p>
+                          <p className="para-card">
+                            {item.description.slice(0, 25)}..
+                          </p>
+                          <div className="price-section">
+                            <p className="price">
+                              {hasDiscount ? (
+                                <>
+                                  <span className="discounted-price">
+                                    ₹{discountedPrice.toFixed(2)}
+                                  </span>
+                                  <span className="original-price">
+                                    ₹{originalPrice.toFixed(2)}
+                                  </span>
+                                </>
+                              ) : (
+                                <span className="normal-price">
+                                  ₹{discountedPrice.toFixed(2)}
+                                </span>
+                              )}
+                            </p>
+                            {hasDiscount && (
+                              <span className="p-discount">
+                                {item.discountPercentage}% Off
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </Link>
 
-                    {/* <button
-                      className="addtocart"
-                      onClick={() => handleAddToCart(item)}
-                    >
-                      Add to Cart
-                    </button> */}
-                  </li>
-                ))}
+                          {/* <button
+                            className="addtocart"
+                            onClick={() => handleAddToCart(item)}
+                          >
+                            Add to Cart
+                          </button> */}
+                    </li>
+                  );
+                })}
               </ul>
             ) : (
               <div className="no-product-wrapper">
